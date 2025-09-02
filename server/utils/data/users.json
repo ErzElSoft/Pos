@@ -1,0 +1,13 @@
+[
+  {
+    "_id": "gpgd4sguymet74des",
+    "name": "System Administrator",
+    "email": "admin@pos.com",
+    "password": "$2a$12$.dOmM5v/R0ClHpV1/.t1wOVyfd0x9geDESzlAwdvKWZJI68ZmYezq",
+    "role": "admin",
+    "isActive": true,
+    "createdAt": "2025-08-26T23:47:23.236Z",
+    "updatedAt": "2025-08-27T01:11:39.934Z",
+    "lastLogin": "2025-08-27T01:11:39.933Z"
+  }
+]
