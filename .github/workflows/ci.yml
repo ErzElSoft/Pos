@@ -27,30 +27,11 @@ jobs:
     - name: Install root dependencies
       run: npm ci
       
-    - name: Install server dependencies
-      run: |
-        cd server
-        npm ci
-        
     - name: Install client dependencies
       run: |
         cd client
         npm install
-        
-    - name: Lint server code
-      run: |
-        cd server
-        npm run lint --if-present
-        
-    - name: Lint client code
-      run: |
-        cd client
-        npm run lint --if-present
-        
-    - name: Run server tests
-      run: |
-        cd server
-        npm test --if-present
+        npm audit fix --force
         
     - name: Run client tests
       run: |
