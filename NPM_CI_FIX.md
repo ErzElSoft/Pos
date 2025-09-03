@@ -7,14 +7,24 @@ npm error `npm ci` can only install packages when your package.json and package-
 npm error Missing: @tanstack/react-query@5.85.9 from lock file
 ```
 
+**And ESLint Error:**
+```
+ESLint couldn't find the config "react-app" to extend from.
+The config "react-app" was referenced from the config file in package.json.
+```
+
 ## 🔍 **Root Cause**
 
 When we updated `package.json` with new dependencies (`@tanstack/react-query`, ESLint plugins, etc.), the `package-lock.json` file wasn't updated to match. The `npm ci` command requires these files to be perfectly synchronized.
 
+**Additionally**, the ESLint configuration was referencing `"react-app"` config which requires the `eslint-config-react-app` package that wasn't installed.
+
 ### **What Happened:**
 1. ✅ Updated `package.json` with secure dependencies
 2. ❌ `package-lock.json` still referenced old versions
-3. ❌ GitHub Actions used `npm ci` which failed due to mismatch
+3. ❌ ESLint config referenced missing `react-app` configuration
+4. ❌ GitHub Actions used `npm ci` which failed due to mismatch
+5. ❌ ESLint linting failed due to missing config dependency
 
 ---
 
@@ -26,7 +36,13 @@ I've updated both `fix-dependencies.bat/.sh` to:
 - ✅ **Regenerate fresh package-lock.json** with `npm install`
 - ✅ **Ensure perfect sync** between package.json and lock file
 
-### **2. Updated GitHub Actions**
+### **2. Fixed ESLint Configuration**
+- ✅ **Replaced `react-app` config** with standard React ESLint setup
+- ✅ **Created `.eslintrc.js`** with proper React + Vite configuration
+- ✅ **Added appropriate rules** for modern React development
+- ✅ **Removed dependency** on `eslint-config-react-app`
+
+### **3. Updated GitHub Actions**
 Changed the CI workflow to use `npm install` instead of `npm ci` for client dependencies to avoid sync issues during development.
 
 ---
