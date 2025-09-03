@@ -1,6 +1,6 @@
 @echo off
-echo 🔧 Fixing NPM Dependencies and Security Issues...
-echo =================================================
+echo 🔧 Fixing NPM Dependencies and Lock File Issues...
+echo =====================================================
 
 REM Navigate to client directory
 cd client
@@ -11,8 +11,8 @@ if exist node_modules rmdir /s /q node_modules
 if exist package-lock.json del package-lock.json
 
 echo.
-echo 📦 Step 2: Installing updated dependencies...
-echo This will install the new secure versions...
+echo 📦 Step 2: Regenerating package-lock.json with updated dependencies...
+echo This will create a new lock file that matches package.json...
 npm install
 
 echo.
@@ -32,21 +32,26 @@ echo 🏗️ Step 6: Testing build...
 npm run build
 
 echo.
-echo ✅ Dependencies Update Complete!
-echo ================================
+echo ✅ Dependencies and Lock File Fixed!
+echo ======================================
 echo.
 echo 📋 What was fixed:
+echo    ✅ Regenerated package-lock.json to match package.json
 echo    ✅ Updated react-query to @tanstack/react-query (v5)
 echo    ✅ Updated react-router-dom to latest stable
 echo    ✅ Added proper ESLint configuration
 echo    ✅ Fixed security vulnerabilities
-echo    ✅ Resolved deprecated package warnings
+echo    ✅ Resolved npm ci sync issues
 echo.
 echo 🎯 Next steps:
 echo    1. Test the application: npm run dev
 echo    2. Verify all features work correctly
-echo    3. Commit the updates to Git
+echo    3. Commit the updates to Git (including new package-lock.json)
 echo.
-echo 🚀 Your POS system dependencies are now secure and up-to-date!
+echo 💡 For GitHub Actions:
+echo    The new package-lock.json will prevent npm ci errors
+echo    GitHub Actions will now install dependencies correctly
+echo.
+echo 🚀 Your POS system dependencies are now secure and GitHub-ready!
 echo.
 pause
