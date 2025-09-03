@@ -123,6 +123,11 @@ Thumbs.db
 /server/data/products.json
 /server/data/orders.json
 
+# AI Chat logs (private conversation history)
+AI chat/
+/AI chat/
+"AI chat"/
+
 # Backup files
 *.bak
 *.backup
