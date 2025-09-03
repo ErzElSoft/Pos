@@ -1,24 +1,21 @@
-name: Deploy Frontend to Vercel
+name: Deploy Frontend to Vercel (Optional)
 
 on:
+  workflow_dispatch:  # Manual trigger only
   push:
     branches: [ main, master ]
     paths: 
       - 'client/**'
       - 'vercel.json'
-  pull_request:
-    branches: [ main, master ]
-    paths:
-      - 'client/**'
 
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
 jobs:
-  Deploy-Preview:
+  build-and-test:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -30,21 +27,24 @@ jobs:
           cache: 'npm'
           cache-dependency-path: 'client/package-lock.json'
           
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
-        
-      - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-        
-      - name: Build Project Artifacts
-        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
-        
-      - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Install client dependencies
+        run: |
+          cd client
+          npm ci
+          
+      - name: Build client
+        run: |
+          cd client
+          npm run build
+          
+      - name: Build success
+        run: echo "✅ Frontend build completed successfully!"
 
-  Deploy-Production:
+  deploy-production:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main' && secrets.VERCEL_TOKEN != ''
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

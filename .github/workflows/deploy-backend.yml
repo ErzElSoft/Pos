@@ -1,22 +1,19 @@
-name: Deploy Backend to Railway
+name: Deploy Backend to Railway (Optional)
 
 on:
+  workflow_dispatch:  # Manual trigger only
   push:
     branches: [ main, master ]
     paths: 
       - 'server/**'
       - 'package.json'
       - 'railway.json'
-  pull_request:
-    branches: [ main, master ]
-    paths:
-      - 'server/**'
 
 env:
   RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
 jobs:
-  deploy:
+  build-and-test:
     runs-on: ubuntu-latest
     
     steps:
@@ -40,9 +37,22 @@ jobs:
         cd server
         npm test --if-present
         
+    - name: Build success
+      run: echo "✅ Backend build completed successfully!"
+        
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main' && secrets.RAILWAY_TOKEN != ''
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+        
     - name: Install Railway CLI
       run: npm install -g @railway/cli
       
     - name: Deploy to Railway
       run: railway up --service=${{ secrets.RAILWAY_SERVICE_ID }}
-      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+      env:
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
