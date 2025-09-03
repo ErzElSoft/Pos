@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { Link, useNavigate } from 'react-router-dom'
 import { format, startOfDay, endOfDay } from 'date-fns'
 import {
